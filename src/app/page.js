@@ -244,22 +244,8 @@ export default function Home() {
     } catch {}
   }, [volume]);
 
-  /* ── Keyboard shortcuts ── */
-  useEffect(() => {
-    const handler = (e) => {
-      if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
-      if (e.code === "Space") { e.preventDefault(); handlePlayPause(); }
-      else if (e.code === "ArrowRight") { e.preventDefault(); handleNext(); }
-      else if (e.code === "ArrowLeft") { e.preventDefault(); handlePrev(); }
-      else if (e.code === "ArrowUp") { e.preventDefault(); setVolume(v => Math.min(100, v + 10)); }
-      else if (e.code === "ArrowDown") { e.preventDefault(); setVolume(v => Math.max(0, v - 10)); }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [isPlaying]);
-
   /* ── Handlers ── */
-  const handlePlayPause = () => {
+  const handlePlayPause = useCallback(() => {
     if (!startedRef.current) {
       startedRef.current = true;
       setHasStarted(true);
@@ -276,25 +262,39 @@ export default function Home() {
     } catch {
       loadPlaylist(genre);
     }
-  };
+  }, [genre, isPlaying, loadPlaylist]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     try {
       if (playerRef.current && readyRef.current && typeof playerRef.current.nextVideo === "function") {
         playerRef.current.nextVideo();
         setTimeout(updateTrackInfo, 1500);
       }
     } catch {}
-  };
+  }, [updateTrackInfo]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     try {
       if (playerRef.current && readyRef.current && typeof playerRef.current.previousVideo === "function") {
         playerRef.current.previousVideo();
         setTimeout(updateTrackInfo, 1500);
       }
     } catch {}
-  };
+  }, [updateTrackInfo]);
+
+  /* ── Keyboard shortcuts ── */
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
+      if (e.code === "Space") { e.preventDefault(); handlePlayPause(); }
+      else if (e.code === "ArrowRight") { e.preventDefault(); handleNext(); }
+      else if (e.code === "ArrowLeft") { e.preventDefault(); handlePrev(); }
+      else if (e.code === "ArrowUp") { e.preventDefault(); setVolume(v => Math.min(100, v + 10)); }
+      else if (e.code === "ArrowDown") { e.preventDefault(); setVolume(v => Math.max(0, v - 10)); }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [handlePlayPause, handleNext, handlePrev]);
 
   const switchGenre = (idx) => {
     setGenre(idx);
