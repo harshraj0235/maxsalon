@@ -137,7 +137,21 @@ export default function Home() {
   const [chatMessages, setChatMessages] = useState([
     { user: "System", text: "Welcome to Max Salon Radio..." }
   ]);
+  const [isCrtMode, setIsCrtMode] = useState(false);
+  const [environment, setEnvironment] = useState(0);
+
+  const ENVIRONMENTS = [
+    { name: "Deluxe Saloon", bg: "/backdrop.png", sfx: { rain: 0, traffic: 40 } },
+    { name: "Nukkad Chai", bg: "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?q=80&w=2070&auto=format&fit=crop", sfx: { rain: 60, traffic: 20 } },
+    { name: "Midnight Highway", bg: "https://images.unsplash.com/photo-1518599904199-0ca897819ddb?q=80&w=2070&auto=format&fit=crop", sfx: { rain: 10, traffic: 80 } },
+  ];
   
+  const handleEnvChange = (idx) => {
+    setEnvironment(idx);
+    setBgImage(ENVIRONMENTS[idx].bg);
+    setSfxVolumes(ENVIRONMENTS[idx].sfx);
+  };
+
   const sfxPlayersRef = useRef({ rain: null, traffic: null });
 
   const playerRef = useRef(null);
@@ -601,6 +615,14 @@ export default function Home() {
   return (
     <>
       <main className={`saloon-main ${isNightMode ? "night-mode" : ""}`}>
+      {/* Feature Expansion: CRT Overlay */}
+      {isCrtMode && (
+        <>
+          <div className="crt-filter" />
+          <div className="crt-vignette" />
+        </>
+      )}
+
       {/* Backdrop */}
       <picture className="backdrop">
         <img src={bgImage} alt="Illustrated Indian street-corner salon" width={1920} height={1088} />
@@ -617,9 +639,24 @@ export default function Home() {
           <span className="listener-label">online</span>
         </span>
         <nav className="header-links">
+          <button onClick={() => setIsCrtMode(!isCrtMode)} className="chip" title="TV Mode" style={{ background: isCrtMode ? "rgba(245,234,214,0.15)" : "" }}>
+            📺
+          </button>
+          <div className="chip" style={{ position: "relative" }}>
+            <select 
+              value={environment} 
+              onChange={(e) => handleEnvChange(parseInt(e.target.value))}
+              style={{ background: "transparent", color: "inherit", border: "none", outline: "none", cursor: "pointer", appearance: "none" }}
+            >
+              {ENVIRONMENTS.map((env, i) => <option key={i} value={i} style={{ color: "#000" }}>{env.name}</option>)}
+            </select>
+          </div>
           <button onClick={() => setIsNightMode(!isNightMode)} className="chip" title="Toggle Day/Night" style={{ background: isNightMode ? "rgba(245,234,214,0.15)" : "" }}>
             {isNightMode ? "☀️" : "🌙"}
           </button>
+          <a href="https://buymeacoffee.com" target="_blank" rel="noopener noreferrer" className="chip" title="Support the Salon">
+            ☕ Tip
+          </a>
           <button onClick={() => { setShowTimerMenu(!showTimerMenu); setShowSfx(false); setShowHistory(false); }} className="chip" title="Focus Timer" style={{ background: showTimerMenu ? "rgba(245,234,214,0.15)" : "" }}>
             ⏱️ {timer > 0 ? fmt(timer) : ""}
           </button>
@@ -779,12 +816,12 @@ export default function Home() {
               onError={(e) => { e.target.style.opacity = "0.3"; }}
             />
           ) : (
-            <div className={`player-thumb ${isPlaying ? "spinning" : ""}`} style={{
-              width: 52, height: 52, borderRadius: "50%", background: "rgba(245,234,214,0.08)",
-              display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem",
-              flexShrink: 0,
-            }}>
-              🎵
+            <div className={`cassette-wrap ${isPlaying ? "playing" : ""}`}>
+              <div className="cassette-label" />
+              <div className="cassette-reels">
+                <div className="reel" />
+                <div className="reel" />
+              </div>
             </div>
           )}
 
