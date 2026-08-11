@@ -404,10 +404,8 @@ export default function Home() {
           },
         },
       });
-    };
-
-    waitAndCreate();
-  }, [volume, startTimer, updateTrackInfo, getPlaylistId]);
+    });
+  }, [volume, startTimer, updateTrackInfo]);
 
   /* ── Volume sync ── */
   useEffect(() => {
