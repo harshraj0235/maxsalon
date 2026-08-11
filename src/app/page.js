@@ -80,6 +80,7 @@ export default function Home() {
   const [title1, setTitle1] = useState("शर्मा जी का");
   const [title2, setTitle2] = useState("सैलून");
   const [subTitle, setSubTitle] = useState("Sharma ji ka salon · open all hours");
+  const [isBuffering, setIsBuffering] = useState(false);
 
   const playerRef = useRef(null);
   const readyRef = useRef(false);
@@ -247,10 +248,15 @@ export default function Home() {
               // PLAYING
               if (silentAudioRef.current) silentAudioRef.current.play().catch(() => {});
               setIsPlaying(true);
+              setIsBuffering(false);
               updateTrackInfo();
             } else if (s === 2) {
               if (silentAudioRef.current) silentAudioRef.current.pause();
               setIsPlaying(false);
+              setIsBuffering(false);
+            } else if (s === 3) {
+              // BUFFERING
+              setIsBuffering(true);
             } else if (s === 0) {
               // ENDED — YouTube auto-advances in playlist mode
               // But if it's the last track, reload the playlist
@@ -580,7 +586,12 @@ export default function Home() {
 
           <div className="player-info">
             <div className="player-song">
-              {hasStarted && trackTitle ? trackTitle : (hasStarted ? "Loading..." : "Tap ▶ to tune in…")}
+              {hasStarted && trackTitle ? (
+                <>
+                  {trackTitle}
+                  {isBuffering && <span style={{ opacity: 0.5, fontSize: "0.8em", marginLeft: 6 }}>Buffering...</span>}
+                </>
+              ) : (hasStarted ? "Loading..." : "Tap ▶ to tune in…")}
             </div>
             <div className="player-artist">
               {hasStarted ? currentGenre.label : "Max Salon Radio"}

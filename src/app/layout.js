@@ -50,6 +50,8 @@ export default function RootLayout({ children }) {
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        <meta name="theme-color" content="#1a1208" />
+        <link rel="preload" as="image" href="/backdrop.png" />
       </head>
       <body>{children}</body>
     </html>
