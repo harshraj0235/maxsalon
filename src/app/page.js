@@ -241,6 +241,15 @@ export default function Home() {
     }
   };
 
+  /* ── Dynamic Document Title ── */
+  useEffect(() => {
+    if (isPlaying && trackTitle) {
+      document.title = `▶️ ${trackTitle} | Max Salon Radio`;
+    } else {
+      document.title = "Max Salon | Deluxe Saloon — An ambient street-corner radio";
+    }
+  }, [isPlaying, trackTitle]);
+
   /* ── Real-Time Listeners ── */
   useEffect(() => {
     const userId = Math.random().toString(36).substring(2) + Date.now().toString(36);
@@ -806,7 +815,7 @@ export default function Home() {
           {trackThumb ? (
             <img
               src={trackThumb}
-              alt=""
+              alt={trackTitle || "Currently playing track"}
               width={52}
               height={52}
               className={`player-thumb ${isPlaying ? "spinning" : ""}`}
@@ -969,7 +978,7 @@ export default function Home() {
           90s Hindi film songs, playing round the clock — the kind of tape that never stops at a neighbourhood barber shop. Also written "Deluxe Salon", though the board outside almost always reads saloon. Perfect background ambiance for studying, working, or just relaxing on a rainy Sunday.
         </p>
 
-        <div className="seo-footer-rotations-title">R O T A T I O N S</div>
+        <h2 className="seo-footer-rotations-title">R O T A T I O N S</h2>
         
         <div className="seo-footer-rotations-grid">
           {GENRES.map((g, i) => (
