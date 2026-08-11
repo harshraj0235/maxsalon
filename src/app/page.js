@@ -585,7 +585,8 @@ export default function Home() {
 
   /* ═══════════ RENDER ═══════════ */
   return (
-    <main className={`saloon-main ${isNightMode ? "night-mode" : ""}`}>
+    <>
+      <main className={`saloon-main ${isNightMode ? "night-mode" : ""}`}>
       {/* Backdrop */}
       <picture className="backdrop">
         <img src={bgImage} alt="Illustrated Indian street-corner salon" width={1920} height={1088} />
@@ -899,19 +900,6 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Minimal AdSense Footer */}
-      <footer className="saloon-footer">
-        <button onClick={() => setShowGenre(true)}>All Genres</button>
-        <span>|</span>
-        <a href="/about">About Us</a>
-        <span>|</span>
-        <a href="/privacy">Privacy Policy</a>
-        <span>|</span>
-        <a href="/terms">Terms of Service</a>
-        <span>|</span>
-        <a href="/disclaimer">Disclaimer</a>
-      </footer>
-
       {/* Hidden YT player */}
       <div className="yt-iframe-hidden" id="yt-wrap">
         <div id="yt-target" />
@@ -921,5 +909,59 @@ export default function Home() {
         <div id="yt-sfx-traffic" />
       </div>
     </main>
+
+    <section className="seo-footer">
+      <div className="seo-footer-inner">
+        <div className="seo-footer-brand">
+          <h2 className="seo-footer-title">डीलक्स सलून</h2>
+          <div className="seo-footer-subtitle">DELUXE SALOON / MAX SALON</div>
+        </div>
+        
+        <p className="seo-footer-desc">
+          90s Hindi film songs, playing round the clock — the kind of tape that never stops at a neighbourhood barber shop. Also written "Deluxe Salon", though the board outside almost always reads saloon. Perfect background ambiance for studying, working, or just relaxing on a rainy Sunday.
+        </p>
+
+        <div className="seo-footer-rotations-title">R O T A T I O N S</div>
+        
+        <div className="seo-footer-rotations-grid">
+          {GENRES.map((g, i) => (
+            <button key={i} onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              switchGenre(i);
+            }}>
+              {g.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="seo-footer-buttons">
+          <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#1ED760"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.12-.899-.48-.12-.421.12-.78.479-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.362 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" /></svg>
+            Spotify
+          </a>
+          <a href="https://music.youtube.com" target="_blank" rel="noopener noreferrer">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#FF0033"><path d="M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm0 19.104c-3.924 0-7.104-3.18-7.104-7.104S8.076 4.896 12 4.896s7.104 3.18 7.104 7.104-3.18 7.104-7.104 7.104zm0-13.332c-3.432 0-6.228 2.796-6.228 6.228S8.568 18.228 12 18.228s6.228-2.796 6.228-6.228S15.432 5.772 12 5.772zM9.684 15.54V8.46L15.816 12l-6.132 3.54z" /></svg>
+            YT Music
+          </a>
+        </div>
+
+        <div className="seo-footer-disclaimer">
+          <p>Audio plays through YouTube's embedded player. Nothing is hosted on this site, and all rights stay with the labels, composers and performers. Song credits are put together from film soundtrack listings.</p>
+          <br />
+          <p>If you hold rights to anything here and want it taken off, email <a href="mailto:harshraj0235@gmail.com">harshraj0235@gmail.com</a> and it comes down.</p>
+        </div>
+
+        <div className="seo-footer-bottom">
+          <span>© 2026 MAXSALON.IN</span>
+          <nav>
+            <a href="/about">About</a>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms</a>
+            <a href="/disclaimer">Disclaimer</a>
+          </nav>
+        </div>
+      </div>
+    </section>
+  </>
   );
 }
