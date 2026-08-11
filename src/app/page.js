@@ -83,16 +83,18 @@ const GENRES = [
     label: "📿 Sufi Soul & Qawwali",
     emoji: "📿",
     playlists: [
-      "PLw1L7eQ3E-7qY8v3zR1P4A4i-B8Q0YmE0",
-      "PL9bw4S5ePsEGtW5n0qC2-1-K7wZp6B8F-",
+      "PLahHeeDRaiOO3WvdazYlvG3TyqVuKmy-O",
+      "PLn0SllVfMyLJMAqRyC91A0tOcIUiR1FOE",
+      "PL1qzqizLIWMY5pfPKEHoLIhkTSpInNeCt",
     ],
   },
   {
     label: "🎸 2000s Indie Pop",
     emoji: "🎸",
     playlists: [
-      "PLP32tI9JmD0kZ62jZtB0QJ7Yy2X0v5I7W",
-      "PL6VikFWYkZnsX8l4E_fKqE43m9Z-b8uI_",
+      "PLH5aaxSRO1hONPNFk1H6iWb47O--pFYl-",
+      "PL1gfuz7ZYcaM2Z7sCGOWORCF0CGmonzOv",
+      "PL95yAnbAkHvlNe-_31CQZcmSMSP8LX4AV",
     ],
   },
 ];
