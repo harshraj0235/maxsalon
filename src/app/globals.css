@@ -201,10 +201,11 @@ img { max-width: 100%; display: block; }
 
 /* ════════ PLAYER BAR ════════ */
 .player-wrap {
-  position: relative;
-  z-index: 30;
-  margin: 0 auto;
-  margin-bottom: max(1.25rem, env(safe-area-inset-bottom));
+  position: fixed;
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
   width: 100%;
   max-width: 580px;
   padding: 0 12px;
@@ -704,7 +705,7 @@ img { max-width: 100%; display: block; }
 .seo-footer {
   background: #1a0f0d; /* Deep brownish/maroon */
   color: #d8c8b8;
-  padding: 80px 40px;
+  padding: 80px 40px 140px 40px;
   font-family: var(--font-body);
 }
 .seo-footer-inner {
