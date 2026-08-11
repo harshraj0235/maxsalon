@@ -76,6 +76,7 @@ export default function Home() {
   const [trackThumb, setTrackThumb] = useState("");
   const [playlistIndex, setPlaylistIndex] = useState(0);
   const [totalTracks, setTotalTracks] = useState(0);
+  const [bgImage, setBgImage] = useState("/backdrop.png");
 
   const playerRef = useRef(null);
   const readyRef = useRef(false);
@@ -98,6 +99,12 @@ export default function Home() {
     return () => clearInterval(id);
   }, []);
 
+  /* ── Background Image Load ── */
+  useEffect(() => {
+    const savedBg = localStorage.getItem("maxsalon_bg");
+    if (savedBg) setBgImage(savedBg);
+  }, []);
+
   /* ── Listeners ── */
   useEffect(() => {
     setListeners(Math.floor(Math.random() * 50) + 15);
@@ -118,11 +125,17 @@ export default function Home() {
     try {
       const p = playerRef.current;
       if (!p || !readyRef.current) return;
+      let title = "";
+      let thumb = "";
       if (typeof p.getVideoData === "function") {
         const data = p.getVideoData();
-        if (data && data.title) setTrackTitle(data.title);
+        if (data && data.title) {
+          title = data.title;
+          setTrackTitle(title);
+        }
         if (data && data.video_id) {
-          setTrackThumb(`https://img.youtube.com/vi/${data.video_id}/default.jpg`);
+          thumb = `https://img.youtube.com/vi/${data.video_id}/default.jpg`;
+          setTrackThumb(thumb);
         }
       }
       if (typeof p.getPlaylistIndex === "function") {
@@ -131,6 +144,15 @@ export default function Home() {
       if (typeof p.getPlaylist === "function") {
         const pl = p.getPlaylist();
         if (pl) setTotalTracks(pl.length);
+      }
+
+      // Update Media Session for background playback
+      if ("mediaSession" in navigator) {
+        navigator.mediaSession.metadata = new window.MediaMetadata({
+          title: title || "Max Salon Radio",
+          artist: "Max Salon",
+          artwork: thumb ? [{ src: thumb, sizes: "120x90", type: "image/jpeg" }] : []
+        });
       }
     } catch {}
   }, []);
@@ -282,7 +304,7 @@ export default function Home() {
     } catch {}
   }, [updateTrackInfo]);
 
-  /* ── Keyboard shortcuts ── */
+  /* ── Keyboard shortcuts & Media Session ── */
   useEffect(() => {
     const handler = (e) => {
       if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
@@ -293,7 +315,23 @@ export default function Home() {
       else if (e.code === "ArrowDown") { e.preventDefault(); setVolume(v => Math.max(0, v - 10)); }
     };
     window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.setActionHandler("play", handlePlayPause);
+      navigator.mediaSession.setActionHandler("pause", handlePlayPause);
+      navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
+      navigator.mediaSession.setActionHandler("nexttrack", handleNext);
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handler);
+      if ("mediaSession" in navigator) {
+        navigator.mediaSession.setActionHandler("play", null);
+        navigator.mediaSession.setActionHandler("pause", null);
+        navigator.mediaSession.setActionHandler("previoustrack", null);
+        navigator.mediaSession.setActionHandler("nexttrack", null);
+      }
+    };
   }, [handlePlayPause, handleNext, handlePrev]);
 
   const switchGenre = (idx) => {
@@ -310,6 +348,23 @@ export default function Home() {
     }
   };
 
+  const handleBgUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const result = ev.target.result;
+        setBgImage(result);
+        try {
+          localStorage.setItem("maxsalon_bg", result);
+        } catch (err) {
+          console.warn("Storage quota exceeded, unable to cache bg", err);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const currentGenre = GENRES[genre];
 
   /* ═══════════ RENDER ═══════════ */
@@ -317,7 +372,7 @@ export default function Home() {
     <main className="saloon-main">
       {/* Backdrop */}
       <picture className="backdrop">
-        <img src="/backdrop.png" alt="Illustrated Indian street-corner salon" width={1920} height={1088} />
+        <img src={bgImage} alt="Illustrated Indian street-corner salon" width={1920} height={1088} />
       </picture>
       <div className="vignette" aria-hidden="true" />
       <div className="grain" aria-hidden="true" />
@@ -471,6 +526,26 @@ export default function Home() {
 
       {/* Contact */}
       <a href="mailto:harshraj0235@gmail.com" className="contact-link">contact: harshraj0235@gmail.com</a>
+
+      {/* Background Image Edit Tool */}
+      <label 
+        className="contact-link" 
+        style={{ 
+          position: "fixed", 
+          bottom: 16, 
+          left: 16, 
+          cursor: "pointer", 
+          zIndex: 50,
+          background: "rgba(14,11,5,0.8)",
+          padding: "6px 12px",
+          borderRadius: 999,
+          backdropFilter: "blur(12px)",
+          border: "1px solid rgba(245,234,214,0.08)"
+        }}
+      >
+        🖼️ Edit Background
+        <input type="file" accept="image/*" style={{ display: "none" }} onChange={handleBgUpload} />
+      </label>
 
       {/* Hidden YT player */}
       <div className="yt-iframe-hidden" id="yt-wrap">
