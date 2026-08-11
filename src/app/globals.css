@@ -617,3 +617,87 @@ img { max-width: 100%; display: block; }
   font-weight: 700;
   color: var(--live);
 }
+
+/* ════════ LEGAL & INFO PAGES (AdSense) ════════ */
+.legal-page {
+  width: 100%;
+  height: 100dvh;
+  overflow-y: auto;
+  background: var(--shade);
+  padding: 40px 24px;
+}
+.legal-container {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+.legal-container h1 {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  margin-bottom: 24px;
+  color: var(--cream);
+}
+.legal-container h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  color: var(--sand);
+}
+.legal-container p {
+  line-height: 1.6;
+  margin-bottom: 16px;
+  opacity: 0.85;
+}
+.legal-container a {
+  color: var(--live);
+  text-decoration: underline;
+}
+.back-link {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 10px 20px;
+  background: rgba(245, 234, 214, 0.1);
+  border-radius: 8px;
+  text-decoration: none !important;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+.back-link:hover {
+  background: rgba(245, 234, 214, 0.2);
+}
+
+/* ════════ MINIMAL FOOTER ════════ */
+.saloon-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  z-index: 100;
+}
+.saloon-footer a, .saloon-footer button {
+  text-decoration: none;
+  color: var(--cream);
+  transition: opacity 0.2s;
+}
+.saloon-footer a:hover, .saloon-footer button:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+@media (max-width: 600px) {
+  .saloon-footer {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-bottom: 20px;
+  }
+}

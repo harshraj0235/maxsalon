@@ -899,6 +899,19 @@ export default function Home() {
         ))}
       </div>
 
+      {/* Minimal AdSense Footer */}
+      <footer className="saloon-footer">
+        <button onClick={() => setShowGenre(true)}>All Genres</button>
+        <span>|</span>
+        <a href="/about">About Us</a>
+        <span>|</span>
+        <a href="/privacy">Privacy Policy</a>
+        <span>|</span>
+        <a href="/terms">Terms of Service</a>
+        <span>|</span>
+        <a href="/disclaimer">Disclaimer</a>
+      </footer>
+
       {/* Hidden YT player */}
       <div className="yt-iframe-hidden" id="yt-wrap">
         <div id="yt-target" />
