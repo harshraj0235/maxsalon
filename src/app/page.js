@@ -961,7 +961,7 @@ export default function Home() {
     <section className="seo-footer">
       <div className="seo-footer-inner">
         <div className="seo-footer-brand">
-          <h2 className="seo-footer-title">डीलक्स सलून</h2>
+          <h1 className="seo-footer-title">डीलक्स सलून</h1>
           <div className="seo-footer-subtitle">DELUXE SALOON / MAX SALON</div>
         </div>
         

@@ -26,6 +26,9 @@ export const metadata = {
     "indian street corner aesthetic"
   ],
   authors: [{ name: "Max Salon" }],
+  alternates: {
+    canonical: "https://maxsalon.moneycal.in",
+  },
   openGraph: {
     title: "Max Salon | Deluxe Saloon — An ambient street-corner radio",
     description:
@@ -61,6 +64,21 @@ export default function RootLayout({ children }) {
         />
         <meta name="theme-color" content="#1a1208" />
         <link rel="preload" as="image" href="/backdrop.png" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "RadioStation",
+              "name": "Max Salon Radio",
+              "alternateName": "Deluxe Saloon",
+              "url": "https://maxsalon.moneycal.in",
+              "description": "An always-on internet radio playing old-school 90s Hindi film songs and retro Indian music over an ambient street-corner background.",
+              "genre": ["Retro Hindi Music", "90s Bollywood", "Lofi"],
+              "image": "https://maxsalon.moneycal.in/backdrop.png"
+            })
+          }}
+        />
       </head>
       <body>{children}</body>
     </html>
