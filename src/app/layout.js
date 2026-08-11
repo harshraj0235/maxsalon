@@ -31,12 +31,21 @@ export const metadata = {
     description:
       "Pull up a chair at Max Salon (Deluxe Saloon): a always-on radio playing old-school favourites over an illustrated Indian street corner.",
     type: "website",
+    images: [
+      {
+        url: "/backdrop.png",
+        width: 1920,
+        height: 1088,
+        alt: "Max Salon Background",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Max Salon | Deluxe Saloon",
     description:
       "A red street-side barbershop in India. An always-on radio playing old-school Hindi favourites at Max Salon.",
+    images: ["/backdrop.png"],
   },
 };
 
