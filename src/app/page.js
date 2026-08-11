@@ -227,12 +227,26 @@ export default function Home() {
     }
   };
 
-  /* ── Listeners ── */
+  /* ── Real-Time Listeners ── */
   useEffect(() => {
-    setListeners(Math.floor(Math.random() * 50) + 15);
-    const id = setInterval(() => {
-      setListeners(p => Math.max(8, p + Math.floor(Math.random() * 7) - 3));
-    }, 6000);
+    const userId = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    
+    const ping = async () => {
+      try {
+        const res = await fetch("/api/presence", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId })
+        });
+        const data = await res.json();
+        if (data.count !== undefined) {
+          setListeners(data.count);
+        }
+      } catch (err) {}
+    };
+
+    ping();
+    const id = setInterval(ping, 10000);
     return () => clearInterval(id);
   }, []);
 
