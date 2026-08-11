@@ -121,6 +121,7 @@ export default function Home() {
   const [title2, setTitle2] = useState("सैलून");
   const [subTitle, setSubTitle] = useState("Sharma ji ka salon · open all hours");
   const [isBuffering, setIsBuffering] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState(null);
 
   const playerRef = useRef(null);
   const readyRef = useRef(false);
@@ -144,8 +145,9 @@ export default function Home() {
     return () => clearInterval(id);
   }, []);
 
-  /* ── LocalStorage Load ── */
+  /* ── LocalStorage Load & PWA Setup ── */
   useEffect(() => {
+    // LocalStorage
     const savedBg = localStorage.getItem("maxsalon_bg");
     if (savedBg) setBgImage(savedBg);
     const savedT1 = localStorage.getItem("maxsalon_t1");
@@ -154,7 +156,30 @@ export default function Home() {
     if (savedT2) setTitle2(savedT2);
     const savedSub = localStorage.getItem("maxsalon_sub");
     if (savedSub) setSubTitle(savedSub);
+
+    // PWA Service Worker
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    }
+    
+    // PWA Install Prompt Listener
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+    
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
   }, []);
+
+  const handleInstallClick = () => {
+    if (installPrompt) {
+      installPrompt.prompt();
+      installPrompt.userChoice.then(() => {
+        setInstallPrompt(null);
+      });
+    }
+  };
 
   /* ── Listeners ── */
   useEffect(() => {
@@ -716,6 +741,29 @@ export default function Home() {
         🖼️ Edit Background
         <input type="file" accept="image/*" style={{ display: "none" }} onChange={handleBgUpload} />
       </label>
+
+      {/* PWA Install Button */}
+      {installPrompt && (
+        <button 
+          className="contact-link" 
+          onClick={handleInstallClick}
+          style={{ 
+            position: "fixed", 
+            bottom: 16, 
+            right: 16, 
+            cursor: "pointer", 
+            zIndex: 50,
+            background: "rgba(14,11,5,0.8)",
+            padding: "6px 12px",
+            borderRadius: 999,
+            backdropFilter: "blur(12px)",
+            border: "1px solid rgba(46,204,113,0.5)",
+            color: "#2ecc71"
+          }}
+        >
+          📱 Install App
+        </button>
+      )}
 
       {/* Hidden YT player */}
       <div className="yt-iframe-hidden" id="yt-wrap">
