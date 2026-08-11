@@ -697,6 +697,7 @@ img { max-width: 100%; display: block; }
     flex-wrap: wrap;
     gap: 8px;
     padding-bottom: 20px;
+  }
 }
 
 /* ════════ SEO FOOTER (Reference Design) ════════ */
