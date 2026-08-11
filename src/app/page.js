@@ -8,8 +8,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
    ═══════════════════════════════════════════════════════════ */
 const GENRES = [
   {
-    label: "☕ Nukkad Ki Chai (Morning Rush)",
-    emoji: "☕",
+    label: "🎵 Old Hindi Classics",
+    emoji: "🎵",
     playlists: [
       "PL0CaUqi81mPlQeSCgy5wvNHLRkHV0ZkLe",
       "PLafSq5UblCNWzrBiEOwBeIdoU8AFXfTqp",
@@ -18,8 +18,8 @@ const GENRES = [
     ],
   },
   {
-    label: "🌧️ Rainy Day Romance (90s Hits)",
-    emoji: "🌧️",
+    label: "💕 90s Romantic",
+    emoji: "💕",
     playlists: [
       "PLAFjPVdERAkt7jNU1XW7EWXHLyYyf7Sux",
       "PL6VikFWYkZnvc00H1-sjzFd104TF1J0fA",
@@ -27,7 +27,27 @@ const GENRES = [
     ],
   },
   {
-    label: "🌙 Midnight Ghazals",
+    label: "🎤 Modern Hits",
+    emoji: "🎤",
+    playlists: [
+      "PL0Z67tlyTaWq7xmJYR0Im1fwtIhc0T0_6",
+      "PLtUuYOHQlyT1vTuyNc4owl0gQgE9keubR",
+      "PL03L1hwj_4MxMljTBYD6jG9jgLyuSkn97",
+      "PLLlb2C74bLzcvPjI7wiz0OlhSNdrZ-mdG",
+    ],
+  },
+  {
+    label: "🪩 Party & Dance",
+    emoji: "🪩",
+    playlists: [
+      "PLnGRV05XmAq2xzqAI9kr-9o11J7uLS19w",
+      "PLc6gu5KBaWUS-ZcQAv3TmXiUKp01j-R-Q",
+      "PL9bw4S5ePsEFXg-VBA_DR9zOfdC8cpZ17",
+      "PLVet2itwf3Bc-oJjmFAPgMy6rnTv1ZKwU",
+    ],
+  },
+  {
+    label: "🌙 Ghazals",
     emoji: "🌙",
     playlists: [
       "PL9T9N_Py36f2VbMScwriqbh9FDfPBBK8f",
@@ -36,19 +56,43 @@ const GENRES = [
     ],
   },
   {
+    label: "☕ Nukkad Ki Chai (Morning Rush)",
+    emoji: "☕",
+    playlists: [
+      "PLafSq5UblCNWzrBiEOwBeIdoU8AFXfTqp",
+      "PLUOEf-vLOCSnKxLaqvfnziciUcPjRkj12",
+    ],
+  },
+  {
+    label: "🌧️ Rainy Day Romance (90s Hits)",
+    emoji: "🌧️",
+    playlists: [
+      "PLAFjPVdERAkt7jNU1XW7EWXHLyYyf7Sux",
+      "PL6VikFWYkZnvc00H1-sjzFd104TF1J0fA",
+    ],
+  },
+  {
+    label: "🌙 Midnight Ghazals",
+    emoji: "🌙",
+    playlists: [
+      "PL9T9N_Py36f2VbMScwriqbh9FDfPBBK8f",
+      "PLJeNQvgQ4Sl_beDke_V6L2OL67jl3CfF4",
+    ],
+  },
+  {
     label: "📿 Sufi Soul & Qawwali",
     emoji: "📿",
     playlists: [
-      "PLw1L7eQ3E-7qY8v3zR1P4A4i-B8Q0YmE0", // Best of Sufi
-      "PL9bw4S5ePsEGtW5n0qC2-1-K7wZp6B8F-", // NFAK
+      "PLw1L7eQ3E-7qY8v3zR1P4A4i-B8Q0YmE0",
+      "PL9bw4S5ePsEGtW5n0qC2-1-K7wZp6B8F-",
     ],
   },
   {
     label: "🎸 2000s Indie Pop",
     emoji: "🎸",
     playlists: [
-      "PLP32tI9JmD0kZ62jZtB0QJ7Yy2X0v5I7W", // Indie Pop
-      "PL6VikFWYkZnsX8l4E_fKqE43m9Z-b8uI_", // 2000s hits
+      "PLP32tI9JmD0kZ62jZtB0QJ7Yy2X0v5I7W",
+      "PL6VikFWYkZnsX8l4E_fKqE43m9Z-b8uI_",
     ],
   },
 ];
@@ -161,7 +205,7 @@ export default function Home() {
           artwork: thumb ? [{ src: thumb, sizes: "120x90", type: "image/jpeg" }] : []
         });
       }
-    } catch {}
+    } catch { }
   }, []);
 
   /* ── Progress tracker ── */
@@ -177,7 +221,7 @@ export default function Home() {
           setDur(fmt(d));
           setProgress(d > 0 ? (ct / d) * 100 : 0);
         }
-      } catch {}
+      } catch { }
     }, 500);
   }, []);
 
@@ -242,7 +286,7 @@ export default function Home() {
             const s = e.data;
             if (s === 1) {
               // PLAYING
-              if (silentAudioRef.current) silentAudioRef.current.play().catch(() => {});
+              if (silentAudioRef.current) silentAudioRef.current.play().catch(() => { });
               setIsPlaying(true);
               setIsBuffering(false);
               updateTrackInfo();
@@ -277,7 +321,7 @@ export default function Home() {
       if (playerRef.current && readyRef.current && typeof playerRef.current.setVolume === "function") {
         playerRef.current.setVolume(volume);
       }
-    } catch {}
+    } catch { }
   }, [volume]);
 
   /* ── Silent Audio Hack for Mobile Background Play ── */
@@ -287,7 +331,7 @@ export default function Home() {
       audio.loop = true;
       silentAudioRef.current = audio;
     }
-    silentAudioRef.current.play().catch(() => {});
+    silentAudioRef.current.play().catch(() => { });
   };
 
   const pauseSilentAudio = () => {
@@ -331,7 +375,7 @@ export default function Home() {
         playerRef.current.nextVideo();
         setTimeout(updateTrackInfo, 1500);
       }
-    } catch {}
+    } catch { }
   }, [updateTrackInfo]);
 
   const handlePrev = useCallback(() => {
@@ -341,7 +385,7 @@ export default function Home() {
         playerRef.current.previousVideo();
         setTimeout(updateTrackInfo, 1500);
       }
-    } catch {}
+    } catch { }
   }, [updateTrackInfo]);
 
   /* ── Keyboard shortcuts & Media Session ── */
@@ -380,7 +424,7 @@ export default function Home() {
     if (startedRef.current) {
       // Destroy old player and load new genre
       if (playerRef.current) {
-        try { playerRef.current.destroy(); } catch {}
+        try { playerRef.current.destroy(); } catch { }
         playerRef.current = null;
         readyRef.current = false;
       }
@@ -400,7 +444,7 @@ export default function Home() {
           const MAX_HEIGHT = 1080;
           let width = img.width;
           let height = img.height;
-          
+
           if (width > height) {
             if (width > MAX_WIDTH) {
               height *= MAX_WIDTH / width;
@@ -412,16 +456,16 @@ export default function Home() {
               height = MAX_HEIGHT;
             }
           }
-          
+
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, width, height);
-          
+
           // Compress to JPEG to fit in localStorage (usually 5MB limit)
           const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
           setBgImage(dataUrl);
-          
+
           try {
             localStorage.setItem("maxsalon_bg", dataUrl);
           } catch (err) {
@@ -456,11 +500,11 @@ export default function Home() {
         </span>
         <nav className="header-links">
           <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" className="chip" title="Spotify">
-            <svg viewBox="0 0 24 24" fill="#1ED760"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.12-.899-.48-.12-.421.12-.78.479-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.362 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+            <svg viewBox="0 0 24 24" fill="#1ED760"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.12-.899-.48-.12-.421.12-.78.479-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.362 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" /></svg>
             <span>Spotify</span>
           </a>
           <a href="https://music.youtube.com" target="_blank" rel="noopener noreferrer" className="chip" title="YT Music">
-            <svg viewBox="0 0 24 24" fill="#FF0033"><path d="M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm0 19.104c-3.924 0-7.104-3.18-7.104-7.104S8.076 4.896 12 4.896s7.104 3.18 7.104 7.104-3.18 7.104-7.104 7.104zm0-13.332c-3.432 0-6.228 2.796-6.228 6.228S8.568 18.228 12 18.228s6.228-2.796 6.228-6.228S15.432 5.772 12 5.772zM9.684 15.54V8.46L15.816 12l-6.132 3.54z"/></svg>
+            <svg viewBox="0 0 24 24" fill="#FF0033"><path d="M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm0 19.104c-3.924 0-7.104-3.18-7.104-7.104S8.076 4.896 12 4.896s7.104 3.18 7.104 7.104-3.18 7.104-7.104 7.104zm0-13.332c-3.432 0-6.228 2.796-6.228 6.228S8.568 18.228 12 18.228s6.228-2.796 6.228-6.228S15.432 5.772 12 5.772zM9.684 15.54V8.46L15.816 12l-6.132 3.54z" /></svg>
             <span>YT Music</span>
           </a>
         </nav>
@@ -469,8 +513,8 @@ export default function Home() {
       {/* Center title */}
       <div className="saloon-center">
         <h1 className="saloon-title" title="Click to edit text!">
-          <span 
-            contentEditable 
+          <span
+            contentEditable
             suppressContentEditableWarning
             spellCheck="false"
             onBlur={(e) => {
@@ -482,8 +526,8 @@ export default function Home() {
           >
             {title1}
           </span>
-          <span 
-            contentEditable 
+          <span
+            contentEditable
             suppressContentEditableWarning
             spellCheck="false"
             onBlur={(e) => {
@@ -496,9 +540,9 @@ export default function Home() {
             {title2}
           </span>
         </h1>
-        <p 
-          className="saloon-subtitle" 
-          contentEditable 
+        <p
+          className="saloon-subtitle"
+          contentEditable
           suppressContentEditableWarning
           spellCheck="false"
           title="Click to edit text!"
@@ -649,18 +693,18 @@ export default function Home() {
         position: "relative",
         zIndex: 10
       }}>
-        Audio plays through YouTube’s embedded player. Nothing is hosted on this site, and all rights stay with the labels, composers and performers. Song credits are put together from film soundtrack listings.<br/><br/>
+        Audio plays through YouTube’s embedded player. Nothing is hosted on this site, and all rights stay with the labels, composers and performers. Song credits are put together from film soundtrack listings.<br /><br />
         If you hold rights to anything here and want it taken off, email <a href="mailto:harshraj0235@gmail.com" style={{ textDecoration: "underline" }}>harshraj0235@gmail.com</a> and it comes down.
       </div>
 
       {/* Background Image Edit Tool */}
-      <label 
-        className="contact-link" 
-        style={{ 
-          position: "fixed", 
-          bottom: 16, 
-          left: 16, 
-          cursor: "pointer", 
+      <label
+        className="contact-link"
+        style={{
+          position: "fixed",
+          bottom: 16,
+          left: 16,
+          cursor: "pointer",
           zIndex: 50,
           background: "rgba(14,11,5,0.8)",
           padding: "6px 12px",
