@@ -33,6 +33,7 @@ export const metadata = {
     title: "Max Salon | Deluxe Saloon — An ambient street-corner radio",
     description:
       "Pull up a chair at Max Salon (Deluxe Saloon): a always-on radio playing old-school favourites over an illustrated Indian street corner.",
+    url: "https://maxsalon.moneycal.in",
     type: "website",
     images: [
       {

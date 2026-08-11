@@ -967,7 +967,7 @@ export default function Home() {
       </div>
     </main>
 
-    <section className="seo-footer">
+    <footer className="seo-footer">
       <div className="seo-footer-inner">
         <div className="seo-footer-brand">
           <h1 className="seo-footer-title">डीलक्स सलून</h1>
@@ -1018,7 +1018,7 @@ export default function Home() {
           </nav>
         </div>
       </div>
-    </section>
+    </footer>
   </>
   );
 }
