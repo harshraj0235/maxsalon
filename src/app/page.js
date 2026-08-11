@@ -627,8 +627,8 @@ export default function Home() {
       {/* Feature Expansion: CRT Overlay */}
       {isCrtMode && (
         <>
-          <div className="crt-filter" />
-          <div className="crt-vignette" />
+          <div className="crt-filter" aria-hidden="true" />
+          <div className="crt-vignette" aria-hidden="true" />
         </>
       )}
 
@@ -648,11 +648,12 @@ export default function Home() {
           <span className="listener-label">online</span>
         </span>
         <nav className="header-links">
-          <button onClick={() => setIsCrtMode(!isCrtMode)} className="chip" title="TV Mode" style={{ background: isCrtMode ? "rgba(245,234,214,0.15)" : "" }}>
+          <button aria-label="Toggle TV Mode" onClick={() => setIsCrtMode(!isCrtMode)} className="chip" title="TV Mode" style={{ background: isCrtMode ? "rgba(245,234,214,0.15)" : "" }}>
             📺
           </button>
           <div className="chip" style={{ position: "relative" }}>
             <select 
+              aria-label="Select Environment"
               value={environment} 
               onChange={(e) => handleEnvChange(parseInt(e.target.value))}
               style={{ background: "transparent", color: "inherit", border: "none", outline: "none", cursor: "pointer", appearance: "none" }}
@@ -660,16 +661,16 @@ export default function Home() {
               {ENVIRONMENTS.map((env, i) => <option key={i} value={i} style={{ color: "#000" }}>{env.name}</option>)}
             </select>
           </div>
-          <button onClick={() => setIsNightMode(!isNightMode)} className="chip" title="Toggle Day/Night" style={{ background: isNightMode ? "rgba(245,234,214,0.15)" : "" }}>
+          <button aria-label="Toggle Day and Night Mode" onClick={() => setIsNightMode(!isNightMode)} className="chip" title="Toggle Day/Night" style={{ background: isNightMode ? "rgba(245,234,214,0.15)" : "" }}>
             {isNightMode ? "☀️" : "🌙"}
           </button>
-          <button onClick={() => { setShowTimerMenu(!showTimerMenu); setShowSfx(false); setShowHistory(false); }} className="chip" title="Focus Timer" style={{ background: showTimerMenu ? "rgba(245,234,214,0.15)" : "" }}>
+          <button aria-label="Toggle Focus Timer" onClick={() => { setShowTimerMenu(!showTimerMenu); setShowSfx(false); setShowHistory(false); }} className="chip" title="Focus Timer" style={{ background: showTimerMenu ? "rgba(245,234,214,0.15)" : "" }}>
             ⏱️ {timer > 0 ? fmt(timer) : ""}
           </button>
-          <button onClick={() => { setShowSfx(!showSfx); setShowTimerMenu(false); setShowHistory(false); }} className="chip" title="Mixer" style={{ background: showSfx ? "rgba(245,234,214,0.15)" : "" }}>
+          <button aria-label="Toggle Audio Mixer" onClick={() => { setShowSfx(!showSfx); setShowTimerMenu(false); setShowHistory(false); }} className="chip" title="Mixer" style={{ background: showSfx ? "rgba(245,234,214,0.15)" : "" }}>
             🎛️
           </button>
-          <button onClick={() => { setShowHistory(!showHistory); setShowTimerMenu(false); setShowSfx(false); }} className="chip" title="History" style={{ background: showHistory ? "rgba(245,234,214,0.15)" : "" }}>
+          <button aria-label="Toggle History" onClick={() => { setShowHistory(!showHistory); setShowTimerMenu(false); setShowSfx(false); }} className="chip" title="History" style={{ background: showHistory ? "rgba(245,234,214,0.15)" : "" }}>
             📜
           </button>
           <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" className="chip" title="Spotify">
