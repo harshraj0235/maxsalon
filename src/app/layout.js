@@ -34,7 +34,8 @@ export const metadata = {
     canonical: "https://maxsalon.moneycal.in",
   },
   icons: {
-    apple: "/favicon.ico",
+    icon: "/icon.svg",
+    apple: "/icon.svg",
   },
   robots: {
     index: true,
