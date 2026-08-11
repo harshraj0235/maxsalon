@@ -634,7 +634,7 @@ export default function Home() {
 
       {/* Backdrop */}
       <picture className="backdrop">
-        <img src={bgImage} alt="Illustrated Indian street-corner salon" width={1920} height={1088} />
+        <img src={bgImage} alt={ENVIRONMENTS[environment].name + " background"} width={1920} height={1088} />
       </picture>
       <div className="vignette" aria-hidden="true" />
       <div className="grain" aria-hidden="true" />
