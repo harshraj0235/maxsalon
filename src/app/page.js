@@ -77,6 +77,9 @@ export default function Home() {
   const [playlistIndex, setPlaylistIndex] = useState(0);
   const [totalTracks, setTotalTracks] = useState(0);
   const [bgImage, setBgImage] = useState("/backdrop.png");
+  const [title1, setTitle1] = useState("शर्मा जी का");
+  const [title2, setTitle2] = useState("सैलून");
+  const [subTitle, setSubTitle] = useState("Sharma ji ka salon · open all hours");
 
   const playerRef = useRef(null);
   const readyRef = useRef(false);
@@ -100,10 +103,16 @@ export default function Home() {
     return () => clearInterval(id);
   }, []);
 
-  /* ── Background Image Load ── */
+  /* ── LocalStorage Load ── */
   useEffect(() => {
     const savedBg = localStorage.getItem("maxsalon_bg");
     if (savedBg) setBgImage(savedBg);
+    const savedT1 = localStorage.getItem("maxsalon_t1");
+    if (savedT1) setTitle1(savedT1);
+    const savedT2 = localStorage.getItem("maxsalon_t2");
+    if (savedT2) setTitle2(savedT2);
+    const savedSub = localStorage.getItem("maxsalon_sub");
+    if (savedSub) setSubTitle(savedSub);
   }, []);
 
   /* ── Listeners ── */
@@ -382,13 +391,42 @@ export default function Home() {
     if (file) {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        const result = ev.target.result;
-        setBgImage(result);
-        try {
-          localStorage.setItem("maxsalon_bg", result);
-        } catch (err) {
-          console.warn("Storage quota exceeded, unable to cache bg", err);
-        }
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 1920;
+          const MAX_HEIGHT = 1080;
+          let width = img.width;
+          let height = img.height;
+          
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Compress to JPEG to fit in localStorage (usually 5MB limit)
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+          setBgImage(dataUrl);
+          
+          try {
+            localStorage.setItem("maxsalon_bg", dataUrl);
+          } catch (err) {
+            console.warn("Storage quota exceeded, unable to cache bg", err);
+          }
+        };
+        img.src = ev.target.result;
       };
       reader.readAsDataURL(file);
     }
@@ -428,11 +466,49 @@ export default function Home() {
 
       {/* Center title */}
       <div className="saloon-center">
-        <h1 className="saloon-title">
-          <span style={{ display: "block" }}>शर्मा जी का</span>
-          <span style={{ display: "block" }}>सैलून</span>
+        <h1 className="saloon-title" title="Click to edit text!">
+          <span 
+            contentEditable 
+            suppressContentEditableWarning
+            spellCheck="false"
+            onBlur={(e) => {
+              const val = e.target.innerText;
+              setTitle1(val);
+              localStorage.setItem("maxsalon_t1", val);
+            }}
+            style={{ display: "block", outline: "none", cursor: "text" }}
+          >
+            {title1}
+          </span>
+          <span 
+            contentEditable 
+            suppressContentEditableWarning
+            spellCheck="false"
+            onBlur={(e) => {
+              const val = e.target.innerText;
+              setTitle2(val);
+              localStorage.setItem("maxsalon_t2", val);
+            }}
+            style={{ display: "block", outline: "none", cursor: "text" }}
+          >
+            {title2}
+          </span>
         </h1>
-        <p className="saloon-subtitle">Sharma ji ka salon · open all hours</p>
+        <p 
+          className="saloon-subtitle" 
+          contentEditable 
+          suppressContentEditableWarning
+          spellCheck="false"
+          title="Click to edit text!"
+          onBlur={(e) => {
+            const val = e.target.innerText;
+            setSubTitle(val);
+            localStorage.setItem("maxsalon_sub", val);
+          }}
+          style={{ outline: "none", cursor: "text" }}
+        >
+          {subTitle}
+        </p>
       </div>
 
       <div className="spacer" />
