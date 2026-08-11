@@ -654,9 +654,6 @@ export default function Home() {
           <button onClick={() => setIsNightMode(!isNightMode)} className="chip" title="Toggle Day/Night" style={{ background: isNightMode ? "rgba(245,234,214,0.15)" : "" }}>
             {isNightMode ? "☀️" : "🌙"}
           </button>
-          <a href="https://buymeacoffee.com/harshx9" target="_blank" rel="noopener noreferrer" className="chip" title="Support the Salon">
-            ☕ Tip
-          </a>
           <button onClick={() => { setShowTimerMenu(!showTimerMenu); setShowSfx(false); setShowHistory(false); }} className="chip" title="Focus Timer" style={{ background: showTimerMenu ? "rgba(245,234,214,0.15)" : "" }}>
             ⏱️ {timer > 0 ? fmt(timer) : ""}
           </button>
