@@ -125,6 +125,21 @@ export default function Home() {
   const [isBuffering, setIsBuffering] = useState(false);
   const [installPrompt, setInstallPrompt] = useState(null);
 
+  // New Feature States
+  const [isNightMode, setIsNightMode] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
+  const [showTimerMenu, setShowTimerMenu] = useState(false);
+  const [history, setHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
+  const [sfxVolumes, setSfxVolumes] = useState({ rain: 0, traffic: 0 });
+  const [showSfx, setShowSfx] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    { user: "System", text: "Welcome to Max Salon Radio..." }
+  ]);
+  
+  const sfxPlayersRef = useRef({ rain: null, traffic: null });
+
   const playerRef = useRef(null);
   const readyRef = useRef(false);
   const timerRef = useRef(null);
@@ -134,7 +149,7 @@ export default function Home() {
 
   useEffect(() => { genreRef.current = genre; }, [genre]);
 
-  /* ── Clock ── */
+  /* ── Clock & Timer ── */
   useEffect(() => {
     const tick = () => {
       const d = new Date();
@@ -144,6 +159,35 @@ export default function Home() {
     };
     tick();
     const id = setInterval(tick, 10000);
+    return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    let id;
+    if (timerActive && timer > 0) {
+      id = setInterval(() => setTimer(t => t - 1), 1000);
+    } else if (timer === 0 && timerActive) {
+      setTimerActive(false);
+      // Play a tiny beep (optional) or just stop
+    }
+    return () => clearInterval(id);
+  }, [timerActive, timer]);
+
+  /* ── Chat Mocking ── */
+  useEffect(() => {
+    const chatNames = ["Rohan99", "Aisha_Music", "Guest_482", "SharmaJiFan", "ChaiLover", "DelhiBoy", "RetroVibes"];
+    const chatTexts = ["Listening from Mumbai 🌧️", "This track takes me back...", "Perfect vibe for studying", "Can we get more Kishore Kumar?", "Hello from Pune!", "The rain sounds + this song = magic", "Anyone else listening while coding?"];
+    
+    const id = setInterval(() => {
+      setChatMessages(prev => {
+        const newMsg = {
+          user: chatNames[Math.floor(Math.random() * chatNames.length)],
+          text: chatTexts[Math.floor(Math.random() * chatTexts.length)]
+        };
+        const updated = [...prev, newMsg];
+        return updated.length > 5 ? updated.slice(updated.length - 5) : updated;
+      });
+    }, 45000); // New message every 45s
     return () => clearInterval(id);
   }, []);
 
@@ -208,8 +252,15 @@ export default function Home() {
       if (typeof p.getVideoData === "function") {
         const data = p.getVideoData();
         if (data && data.title) {
-          title = data.title;
-          setTrackTitle(title);
+          if (data.title !== title) {
+            title = data.title;
+            setTrackTitle(title);
+            setHistory(prev => {
+              if (prev[0] === title) return prev;
+              const next = [title, ...prev];
+              return next.length > 10 ? next.slice(0, 10) : next;
+            });
+          }
         }
         if (data && data.video_id) {
           thumb = `https://img.youtube.com/vi/${data.video_id}/default.jpg`;
@@ -267,47 +318,63 @@ export default function Home() {
     return g.playlists[Math.floor(Math.random() * g.playlists.length)];
   }, []);
 
+  /* ── Initialize SFX Players Once ── */
+  useEffect(() => {
+    let checkInterval;
+    const initSfx = () => {
+      if (window.YT && window.YT.Player) {
+        if (!sfxPlayersRef.current.rain) {
+          sfxPlayersRef.current.rain = new window.YT.Player("yt-sfx-rain", {
+            height: "10", width: "10", videoId: "mPZkdNFkNps",
+            playerVars: { autoplay: 1, controls: 0, loop: 1, playlist: "mPZkdNFkNps" },
+            events: {
+              onReady: (e) => { e.target.setVolume(0); e.target.playVideo(); }
+            }
+          });
+        }
+        if (!sfxPlayersRef.current.traffic) {
+          sfxPlayersRef.current.traffic = new window.YT.Player("yt-sfx-traffic", {
+            height: "10", width: "10", videoId: "92Q5HlV-oEQ",
+            playerVars: { autoplay: 1, controls: 0, loop: 1, playlist: "92Q5HlV-oEQ" },
+            events: {
+              onReady: (e) => { e.target.setVolume(0); e.target.playVideo(); }
+            }
+          });
+        }
+        clearInterval(checkInterval);
+      }
+    };
+    checkInterval = setInterval(initSfx, 500);
+    return () => clearInterval(checkInterval);
+  }, []);
+
   /* ── Create / load player with playlist ── */
   const loadPlaylist = useCallback((genreIdx) => {
-    const plId = getPlaylistId(genreIdx);
-    readyRef.current = false;
-
-    // Fresh div
-    const wrap = document.getElementById("yt-wrap");
-    if (wrap) wrap.innerHTML = '<div id="yt-target"></div>';
-
-    const waitAndCreate = () => {
-      if (!window.YT || !window.YT.Player) {
-        setTimeout(waitAndCreate, 200);
-        return;
-      }
-
+    window.YT.ready(() => {
+      // Main Music Player
       playerRef.current = new window.YT.Player("yt-target", {
         height: "200",
         width: "200",
         playerVars: {
           listType: "playlist",
-          list: plId,
+          list: GENRES[genreIdx].playlists[0],
           autoplay: 1,
           controls: 0,
           disablekb: 1,
           fs: 0,
+          iv_load_policy: 3,
           modestbranding: 1,
-          rel: 0,
-          loop: 1,
-          enablejsapi: 1,
-          playsinline: 1,
-          origin: typeof window !== "undefined" ? window.location.origin : "",
         },
         events: {
           onReady: (e) => {
             readyRef.current = true;
             e.target.setVolume(volume);
             e.target.setShuffle(true);
-            e.target.playVideo();
-            setIsPlaying(true);
-            startTimer();
-            setTimeout(updateTrackInfo, 2000);
+            // Wait a bit, then play
+            setTimeout(() => {
+              e.target.playVideo();
+              startTimer();
+            }, 1500);
           },
           onStateChange: (e) => {
             const s = e.data;
@@ -404,6 +471,17 @@ export default function Home() {
       }
     } catch { }
   }, [updateTrackInfo]);
+
+  useEffect(() => {
+    try {
+      if (sfxPlayersRef.current.rain && typeof sfxPlayersRef.current.rain.setVolume === "function") {
+        sfxPlayersRef.current.rain.setVolume(sfxVolumes.rain);
+      }
+      if (sfxPlayersRef.current.traffic && typeof sfxPlayersRef.current.traffic.setVolume === "function") {
+        sfxPlayersRef.current.traffic.setVolume(sfxVolumes.traffic);
+      }
+    } catch {}
+  }, [sfxVolumes]);
 
   const handlePrev = useCallback(() => {
     initAndPlaySilentAudio();
@@ -509,7 +587,7 @@ export default function Home() {
 
   /* ═══════════ RENDER ═══════════ */
   return (
-    <main className="saloon-main">
+    <main className={`saloon-main ${isNightMode ? "night-mode" : ""}`}>
       {/* Backdrop */}
       <picture className="backdrop">
         <img src={bgImage} alt="Illustrated Indian street-corner salon" width={1920} height={1088} />
@@ -526,6 +604,18 @@ export default function Home() {
           <span className="listener-label">online</span>
         </span>
         <nav className="header-links">
+          <button onClick={() => setIsNightMode(!isNightMode)} className="chip" title="Toggle Day/Night" style={{ background: isNightMode ? "rgba(245,234,214,0.15)" : "" }}>
+            {isNightMode ? "☀️" : "🌙"}
+          </button>
+          <button onClick={() => { setShowTimerMenu(!showTimerMenu); setShowSfx(false); setShowHistory(false); }} className="chip" title="Focus Timer" style={{ background: showTimerMenu ? "rgba(245,234,214,0.15)" : "" }}>
+            ⏱️ {timer > 0 ? fmt(timer) : ""}
+          </button>
+          <button onClick={() => { setShowSfx(!showSfx); setShowTimerMenu(false); setShowHistory(false); }} className="chip" title="Mixer" style={{ background: showSfx ? "rgba(245,234,214,0.15)" : "" }}>
+            🎛️
+          </button>
+          <button onClick={() => { setShowHistory(!showHistory); setShowTimerMenu(false); setShowSfx(false); }} className="chip" title="History" style={{ background: showHistory ? "rgba(245,234,214,0.15)" : "" }}>
+            📜
+          </button>
           <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" className="chip" title="Spotify">
             <svg viewBox="0 0 24 24" fill="#1ED760"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.12-.899-.48-.12-.421.12-.78.479-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.362 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" /></svg>
             <span>Spotify</span>
@@ -536,6 +626,40 @@ export default function Home() {
           </a>
         </nav>
       </header>
+
+      {/* Floating Menus */}
+      {showTimerMenu && (
+        <div className="glass-panel" style={{ position: "absolute", top: 70, right: 120, display: "flex", gap: 8 }}>
+          <button onClick={() => { setTimer(25 * 60); setTimerActive(true); setShowTimerMenu(false); }} className="chip">25m</button>
+          <button onClick={() => { setTimer(50 * 60); setTimerActive(true); setShowTimerMenu(false); }} className="chip">50m</button>
+          <button onClick={() => { setTimerActive(false); setTimer(0); setShowTimerMenu(false); }} className="chip">Stop</button>
+        </div>
+      )}
+
+      {showSfx && (
+        <div className="glass-panel sfx-mixer">
+          <div className="sfx-row">
+            <span>🌧️ Rain</span>
+            <input type="range" min="0" max="100" value={sfxVolumes.rain} onChange={e => setSfxVolumes(p => ({ ...p, rain: parseInt(e.target.value) }))} />
+          </div>
+          <div className="sfx-row">
+            <span>🚗 Traffic</span>
+            <input type="range" min="0" max="100" value={sfxVolumes.traffic} onChange={e => setSfxVolumes(p => ({ ...p, traffic: parseInt(e.target.value) }))} />
+          </div>
+        </div>
+      )}
+
+      {showHistory && (
+        <div className="glass-panel history-panel">
+          <div style={{ fontWeight: "bold", paddingBottom: 6, borderBottom: "1px solid var(--glass-border)", marginBottom: 4 }}>Recently Played</div>
+          {history.map((h, i) => (
+            <div key={i} className={`history-item ${i === 0 ? "playing" : ""}`}>
+              {i === 0 ? "▶ " : ""}{h}
+            </div>
+          ))}
+          {history.length === 0 && <div className="history-item">No tracks played yet...</div>}
+        </div>
+      )}
 
       {/* Center title */}
       <div className="saloon-center">
@@ -767,9 +891,23 @@ export default function Home() {
         </button>
       )}
 
+      {/* Mock Chat Box */}
+      <div className="chat-box">
+        {chatMessages.map((msg, i) => (
+          <div key={i} className="chat-msg">
+            <span className="chat-user">{msg.user}:</span>
+            <span>{msg.text}</span>
+          </div>
+        ))}
+      </div>
+
       {/* Hidden YT player */}
       <div className="yt-iframe-hidden" id="yt-wrap">
         <div id="yt-target" />
+      </div>
+      <div className="yt-iframe-hidden">
+        <div id="yt-sfx-rain" />
+        <div id="yt-sfx-traffic" />
       </div>
     </main>
   );
