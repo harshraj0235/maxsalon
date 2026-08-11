@@ -205,8 +205,8 @@ export default function Home() {
       }
 
       playerRef.current = new window.YT.Player("yt-target", {
-        height: "1",
-        width: "1",
+        height: "200",
+        width: "200",
         playerVars: {
           listType: "playlist",
           list: plId,

@@ -513,12 +513,14 @@ img { max-width: 100%; display: block; }
   .ctrl-btn-play { width: 38px; height: 38px; }
 }
 
-/* ════════ HIDDEN IFRAME ════════ */
+/* ════════ HIDDEN IFRAME (Background Play Trick) ════════ */
 .yt-iframe-hidden {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  opacity: 0.01;
   pointer-events: none;
   z-index: -1;
 }
