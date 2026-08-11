@@ -8,8 +8,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
    ═══════════════════════════════════════════════════════════ */
 const GENRES = [
   {
-    label: "🎵 Old Hindi Classics",
-    emoji: "🎵",
+    label: "☕ Nukkad Ki Chai (Morning Rush)",
+    emoji: "☕",
     playlists: [
       "PL0CaUqi81mPlQeSCgy5wvNHLRkHV0ZkLe",
       "PLafSq5UblCNWzrBiEOwBeIdoU8AFXfTqp",
@@ -18,8 +18,8 @@ const GENRES = [
     ],
   },
   {
-    label: "💕 90s Romantic",
-    emoji: "💕",
+    label: "🌧️ Rainy Day Romance (90s Hits)",
+    emoji: "🌧️",
     playlists: [
       "PLAFjPVdERAkt7jNU1XW7EWXHLyYyf7Sux",
       "PL6VikFWYkZnvc00H1-sjzFd104TF1J0fA",
@@ -27,32 +27,28 @@ const GENRES = [
     ],
   },
   {
-    label: "🎤 Modern Hits",
-    emoji: "🎤",
-    playlists: [
-      "PL0Z67tlyTaWq7xmJYR0Im1fwtIhc0T0_6",
-      "PLtUuYOHQlyT1vTuyNc4owl0gQgE9keubR",
-      "PL03L1hwj_4MxMljTBYD6jG9jgLyuSkn97",
-      "PLLlb2C74bLzcvPjI7wiz0OlhSNdrZ-mdG",
-    ],
-  },
-  {
-    label: "🪩 Party & Dance",
-    emoji: "🪩",
-    playlists: [
-      "PLnGRV05XmAq2xzqAI9kr-9o11J7uLS19w",
-      "PLc6gu5KBaWUS-ZcQAv3TmXiUKp01j-R-Q",
-      "PL9bw4S5ePsEFXg-VBA_DR9zOfdC8cpZ17",
-      "PLVet2itwf3Bc-oJjmFAPgMy6rnTv1ZKwU",
-    ],
-  },
-  {
-    label: "🌙 Ghazals",
+    label: "🌙 Midnight Ghazals",
     emoji: "🌙",
     playlists: [
       "PL9T9N_Py36f2VbMScwriqbh9FDfPBBK8f",
       "PLJeNQvgQ4Sl_beDke_V6L2OL67jl3CfF4",
       "PLJeNQvgQ4Sl-mNI5aSCy7dEmQrLMwadhS",
+    ],
+  },
+  {
+    label: "📿 Sufi Soul & Qawwali",
+    emoji: "📿",
+    playlists: [
+      "PLw1L7eQ3E-7qY8v3zR1P4A4i-B8Q0YmE0", // Best of Sufi
+      "PL9bw4S5ePsEGtW5n0qC2-1-K7wZp6B8F-", // NFAK
+    ],
+  },
+  {
+    label: "🎸 2000s Indie Pop",
+    emoji: "🎸",
+    playlists: [
+      "PLP32tI9JmD0kZ62jZtB0QJ7Yy2X0v5I7W", // Indie Pop
+      "PL6VikFWYkZnsX8l4E_fKqE43m9Z-b8uI_", // 2000s hits
     ],
   },
 ];
