@@ -524,8 +524,22 @@ export default function Home() {
         ⌨️ Space: play/pause · ←→: prev/next · ↑↓: volume
       </div>
 
-      {/* Contact */}
-      <a href="mailto:harshraj0235@gmail.com" className="contact-link">contact: harshraj0235@gmail.com</a>
+      {/* Disclaimer / Contact */}
+      <div style={{
+        fontSize: "0.55rem",
+        opacity: 0.35,
+        textAlign: "center",
+        maxWidth: "600px",
+        margin: "0 auto",
+        padding: "0 20px 20px 20px",
+        lineHeight: "1.5",
+        fontFamily: "var(--font-sans)",
+        position: "relative",
+        zIndex: 10
+      }}>
+        Audio plays through YouTube’s embedded player. Nothing is hosted on this site, and all rights stay with the labels, composers and performers. Song credits are put together from film soundtrack listings.<br/><br/>
+        If you hold rights to anything here and want it taken off, email <a href="mailto:harshraj0235@gmail.com" style={{ textDecoration: "underline" }}>harshraj0235@gmail.com</a> and it comes down.
+      </div>
 
       {/* Background Image Edit Tool */}
       <label 
