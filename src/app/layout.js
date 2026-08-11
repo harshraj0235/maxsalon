@@ -1,5 +1,9 @@
 import "./globals.css";
 
+export const viewport = {
+  themeColor: "#1a1208",
+};
+
 export const metadata = {
   title: "Max Salon | Deluxe Saloon — An ambient street-corner radio",
   description:
@@ -28,6 +32,13 @@ export const metadata = {
   authors: [{ name: "Max Salon" }],
   alternates: {
     canonical: "https://maxsalon.moneycal.in",
+  },
+  icons: {
+    apple: "/favicon.ico",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
   openGraph: {
     title: "Max Salon | Deluxe Saloon — An ambient street-corner radio",
@@ -63,7 +74,6 @@ export default function RootLayout({ children }) {
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        <meta name="theme-color" content="#1a1208" />
         <link rel="preload" as="image" href="/backdrop.png" />
         <script
           type="application/ld+json"
